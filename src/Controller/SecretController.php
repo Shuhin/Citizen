@@ -6,27 +6,27 @@ use Cake\View\Helper\SessionHelper;
 use Stevenmaguire;
 use Jumbojett\OpenIDConnectClient;
 
-class PrivateController extends AppController
+class SecretController extends AppController
 {
     public function index()
     {   
-        $oidc = new OpenIDConnectClient('http://10.0.0.247:8080/auth/realms/CITIZENSSO',
-        'citizensso-client',
-        '1441552b-4b95-4b3b-aab7-a6437e61d7c9');
-        $oidc->setCertPath('http://10.0.0.247:8080/auth/realms/CITIZENSSO/protocol/openid-connect/certs');
-        $oidc->setRedirectUrl('http://localhost:8765/private');
+        $oidc = new OpenIDConnectClient('http://10.0.0.110:8080/auth/realms/ISDP',
+        'cakephpcitizensso',
+        'b6f66498-ed5b-4dca-bbe0-c39219d27e70');
+        $oidc->setCertPath('http://10.0.0.110:8080/auth/realms/ISDP/protocol/openid-connect/certs');
+        $oidc->setRedirectUrl('http://10.0.0.248:8765/Secret');
         
         $oidc->setResponseTypes(['id_token']);
         $oidc->addAuthParam(['response_mode' => 'form_post']);
         $oidc->setAllowImplicitFlow(true);
         //previous
-        $oidc->addScope(['citizen','openid']);
+       //$oidc->addScope(['citizen','openid']);
         $oidc->authenticate();
         
         $claims= $oidc->getVerifiedClaims();
         debug( $claims);
-        $this->set('demo_data',json_encode($claims->preferred_username));
+        $this->set('demo_data',json_encode($claims->sub));
         $this -> render('index');
-        }
+        }  
 }
 ?>
